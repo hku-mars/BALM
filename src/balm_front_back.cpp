@@ -623,6 +623,7 @@ int main(int argc, char **argv)
       pl_surf_centor_map += iter->second->root_centors;
       // You can add some distance restrictions in case that pl_surf_centor_map is too large.
       // You can also push points in root voxel into kdtree (loam mapping)
+      // You can use "surf_map.erase(iter++)" to erase voxel for saving memory
     }
 
     for(auto iter=corn_map.begin(); iter!=corn_map.end(); ++iter)
