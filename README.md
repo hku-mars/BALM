@@ -6,7 +6,7 @@ BALM is a basic and simple system to use bundle adjustment (BA) in lidar mapping
 
 <div align="center">
     <img src="./pictures/figure1.jpg" width = 45% >
-    <img src="./pictures/BAafter.jpg"" width = 45% >
+    <img src="./pictures/BAafter.jpg" width = 45% >
 </div>
 
 In the development of our package, we reference to [A-LOAM](https://github.com/HKUST-Aerial-Robotics/A-LOAM), [Livox_mapping](https://github.com/Livox-SDK/livox_mapping), and [LeGO-LOAM](https://github.com/RobustFieldAutonomyLab/LeGO-LOAM) for source code or datasets. 
