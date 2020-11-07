@@ -82,6 +82,5 @@ Thanks for LOAM (J. Zhang and S. Singh. LOAM: Lidar Odometry and Mapping in Real
 ## 5 Appendix
 
 Simplify covariance matrix
-$$
-A=\frac{1}{N}\sum_{i=1}^{N}(p_i-\bar{p})(p_i-\bar{p})^{T}= \Big(\frac{1}{N}\sum_{i=1}^{N}p_i p_i^T\Big) - \bar{p}\bar{p}^T
-$$
+
+![appen](./pictures/appendix.png)
