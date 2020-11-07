@@ -83,4 +83,6 @@ Thanks for LOAM (J. Zhang and S. Singh. LOAM: Lidar Odometry and Mapping in Real
 
 Simplify covariance matrix
 
-![appen](./pictures/appendix.png)
+<div align="center">
+    <img src="./pictures/appendix.png" width = 45% >
+</div>
