@@ -645,7 +645,7 @@ int main(int argc, char **argv)
         opt_lsv.t_poses[i] = t_buf[window_base + i];
       }
 
-      // First sliding window do not optimize
+      // Do not optimize first sliding window 
       if(window_base == 0)
       {
         opt_lsv.set_refine_state(2);
