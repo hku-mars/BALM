@@ -44,7 +44,7 @@ Clone the repository and catkin_make:
 Download [2020_parking_lot](https://connecthkuhk-my.sharepoint.com/:u:/g/personal/u3007335_connect_hku_hk/EZn7Mbj0VRNKpZZZ0D0DkW8Bttcr6RafwpjJCAaiOAykxw?e=COCVRq) and then
 
 ```
-    roslaunch balm balm_horizon.launch 
+    roslaunch balm balm_horizon_outdoor.launch 
     rosbag play YOUR_DOWNLOADED.bag
 ```
 
@@ -71,7 +71,7 @@ Download [same_postion](https://connecthkuhk-my.sharepoint.com/:u:/g/personal/u3
 We also provide a version which uses LOAM as front-end and BALM as back-end like the figure 2 in the paper. Download [stairs](https://connecthkuhk-my.sharepoint.com/:u:/g/personal/u3007335_connect_hku_hk/EUauSzsnUiJCrP741WMh36kBQua3qtmNtI5FWH5HzAVkdg?e=mSRGJY) and then
 
 ```
-    roslaunch balm balm_loam_horizon.launch
+    roslaunch balm balm_loam_horizon_indoor.launch
     rosbag play YOUR_DOWNLOADED.bag
 ```
 
