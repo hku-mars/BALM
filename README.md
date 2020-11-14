@@ -15,11 +15,11 @@ In the development of our package, we reference to [A-LOAM](https://github.com/H
 
 ### 1.1 Ubuntu and ROS
 
-Ubuntu 64-bit 16.04 or 18.04. [ROS Installation](http://wiki.ros.org/ROS/Installation)
+Ubuntu 64-bit 16.04. [ROS Installation](http://wiki.ros.org/ROS/Installation) (Kinetic recommended)
 
 ### 1.2 PCL, OpenCV and Eigen
 
-Follow [PCL Installation](http://www.pointclouds.org/downloads/linux.html). Follow [Eigen Installation](http://eigen.tuxfamily.org/index.php?title=Main_Page). Follow [OpenCV Installation](https://opencv.org/releases/).
+Follow [PCL Installation](https://pcl.readthedocs.io/projects/tutorials/en/latest/) (1.7 recommended). Follow [Eigen Installation](http://eigen.tuxfamily.org/index.php?title=Main_Page) (3.3.7 recommended). Follow [OpenCV Installation](https://opencv.org/releases/) (3.3.1 recommanded).
 
 ### 1.3 Livox Ros Driver
 
@@ -59,7 +59,7 @@ Download [hall_example](https://connecthkuhk-my.sharepoint.com/:u:/g/personal/u3
 
 ### 3.3 VLP-16
 
-Download [same_postion](https://connecthkuhk-my.sharepoint.com/:u:/g/personal/u3007335_connect_hku_hk/EdJF9fAKI7pFlPsqo8n9aAABaXv201av5sonsQIQKVXlXw?e=sqXpEr) (provided by [LeGO-LOAM](https://github.com/RobustFieldAutonomyLab/LeGO-LOAM), you can also download by [same_position](https://drive.google.com/drive/folders/1hRcgDOKWl5jmYK2m66_ctx-91_eGneip)) and then
+Download [same_postion](https://connecthkuhk-my.sharepoint.com/:u:/g/personal/u3007335_connect_hku_hk/EbdqdFr6BuREuvKSE-49xNABAnJtiwTqxt-vfZPcK2Eu0Q?e=iQ8sRw) (provided by [LeGO-LOAM](https://github.com/RobustFieldAutonomyLab/LeGO-LOAM), you can also download by [same_position](https://drive.google.com/drive/folders/1hRcgDOKWl5jmYK2m66_ctx-91_eGneip)) and then
 
 ```
     roslaunch balm balm_velo16.launch
