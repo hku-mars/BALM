@@ -94,7 +94,7 @@ int main(int argc, char **argv)
   ros::init(argc, argv, "balm_front_back");
   ros::NodeHandle n;
 
-  ros::Subscriber sub_surf, sub_corn, sub_full, sub_odom;
+  ros::Subscriber sub_surf, sub_corn, sub_full;
   
   sub_surf = n.subscribe<sensor_msgs::PointCloud2>("/pc2_surfN", 100, surf_handler);
   sub_corn = n.subscribe<sensor_msgs::PointCloud2>("/pc2_cornN", 100, corn_handler);
@@ -121,10 +121,6 @@ int main(int argc, char **argv)
   n.param<double>("corn_filter_length", corn_filter_length, 0.2);
   n.param<double>("root_surf_voxel_size", voxel_size[0], 1);
   n.param<double>("root_corn_voxel_size", voxel_size[1], 1);
-  n.param<double>("surf_feat_eigen_limit", feat_eigen_limit[0], 9);
-  n.param<double>("corn_feat_eigen_limit", feat_eigen_limit[0], 4);
-  n.param<double>("surf_opt_feat_eigen_limit", feat_eigen_limit[0], 16);
-  n.param<double>("corn_opt_feat_eigen_limit", feat_eigen_limit[0], 9);
   n.param<int>("scan2map_on", scan2map_on, 10);
   n.param<int>("pub_skip", pub_skip, 1);
   printf("%lf %lf\n", voxel_size[0], voxel_size[1]);
