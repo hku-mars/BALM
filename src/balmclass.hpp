@@ -632,9 +632,6 @@ public:
       D = Hess.diagonal().asDiagonal();
       Hess2 = Hess + u*D;
       
-      // The eigen solver is slower than opencv solver
-
-      // dxi = (Hess2).bdcSvd(Eigen::ComputeFullU|Eigen::ComputeFullV).solve(-JacT);
       for(int j=0; j<jac_leng; j++)
       {
         matB.at<double>(j, 0) = -JacT(j, 0);
