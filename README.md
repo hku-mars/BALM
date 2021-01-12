@@ -2,7 +2,7 @@
 
 ## Bundle adjustment for lidar mapping
 
-BALM is a basic and simple system to use bundle adjustment (BA) in lidar mapping. It uses an local BA and temporal sliding window to work in real-time. The code is simple with detailed notes and we do not add too many functions which may confuse you when reading the BALM. We will add motion blur, key frame and loop closure to make it a complete SLAM system in next version. The BALM is also a useful tool for multiple lidar calibration and SLAM.
+BALM is a basic and simple system to use bundle adjustment (BA) in lidar mapping. It uses an local BA and temporal sliding window to work in real-time. The code is simple with detailed notes and we do not add too many functions which may confuse you when reading the BALM. We will add motion blur, key frame and loop closure to make it a complete SLAM system in next version. The BALM is also a useful tool for multiple lidar calibration and SLAM. More experiment details can be found in the [video](https://youtu.be/d8R7aJmKifQ).
 
 <div align="center">
     <img src="./pictures/figure1.jpg" width = 45% >
