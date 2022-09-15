@@ -1,1 +1,1 @@
-The BLAM2.0 is coming soon.
+The BALM2.0 is coming soon.
