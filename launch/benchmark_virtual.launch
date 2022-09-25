@@ -1,0 +1,16 @@
+<launch>
+	<arg name="rviz" default="true" />
+
+	<param name="winSize" type="int" value="20" />
+	<param name="sufSize" type="int" value="20" />
+	<param name="ptsSize" type="int" value="40" />
+	<param name="full_flag" type="int" value="0" />
+	<param name="point_noise" type="double" value="0.01" />
+	<param name="surf_range" type="double" value="2" />
+	<node pkg="balm2" type="benchmark_virtual" name="benchmark_virtual" output="screen" />
+
+	<group if="$(arg rviz)">
+		<node launch-prefix="nice" pkg="rviz" type="rviz" name="rviz" args="-d $(find balm2)/rviz_cfg/back.rviz" />
+	</group>  
+
+</launch>
