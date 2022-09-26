@@ -2,7 +2,7 @@
 
 ## Efficient and Consistent Bundle Adjustment on Lidar Point Clouds
 
-**BALM 2.0** is a basic and simple system to use bundle adjustment (BA) in lidar mapping. It includes three experiments in the paper. We try to keep the code as concise as possible, to avoid confuse the readers. It is notable that this package do not include the application experiments, which will be open-sourced in other projects. The [paper]()  is available on Arxiv and more experiments details can be found in the [video](https://youtu.be/MDrIAyhQ-9E).
+**BALM 2.0** is a basic and simple system to use bundle adjustment (BA) in lidar mapping. It includes three experiments in the paper. We try to keep the code as concise as possible, to avoid confuse the readers. It is notable that this package do not include the application experiments, which will be open-sourced in other projects. The paper  is available on Arxiv and more experiments details can be found in the [video](https://youtu.be/MDrIAyhQ-9E).
 
 <div align="center">
     <img src="./pic/formulation.png" width = 50% >
