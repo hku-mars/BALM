@@ -33,7 +33,6 @@ Clone the repository and catkin_make:
 ```
 cd ~/catkin_ws/src
 git clone https://github.com/hku-mars/BALM
-unzip balm2/datas
 cd ../
 catkin_make
 source ~/catkin_ws/devel/setup.bash
