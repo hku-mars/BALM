@@ -38,6 +38,8 @@ catkin_make
 source ~/catkin_ws/devel/setup.bash
 ```
 
+**Note**: Before compilation, the file folder "BALM-old" had better be deleted if you do not require BALM1.0, or removed to other irrelevant path.
+
 ## 3. Run the package
 
 ### 3.1 Consistency experiments
