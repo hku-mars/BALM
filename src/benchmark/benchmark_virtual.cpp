@@ -462,10 +462,16 @@ public:
       delete plvecVoxels[i];
     plvecVoxels.clear();
   
+    // for(int j=1; j<winSize; j++)
+    // {
+    //   x_stats[j].p = x_stats[j].p - x_stats[j].R * x_stats[0].R.transpose() * x_stats[0].p;
+    //   x_stats[j].R = x_stats[j].R * x_stats[0].R.transpose();
+    // }
+
     for(int j=1; j<winSize; j++)
     {
-      x_stats[j].p = x_stats[j].p - x_stats[j].R * x_stats[0].R.transpose() * x_stats[0].p;
-      x_stats[j].R = x_stats[j].R * x_stats[0].R.transpose();
+      x_stats[j].p = x_stats[0].R.transpose() * (x_stats[j].p - x_stats[0].p);
+      x_stats[j].R = x_stats[0].R.transpose() * x_stats[j].R;
     }
 
     x_stats[0].R.setIdentity();
