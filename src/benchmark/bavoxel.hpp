@@ -8,7 +8,7 @@
 int layer_limit = 2;
 int layer_size[] = {30, 30, 30, 30};
 // float eigen_value_array[] = {1.0/4.0, 1.0/4.0, 1.0/4.0};
-float eigen_value_array[4] = {1.0/36, 1.0/25, 1.0/25, 1.0/25};
+float eigen_value_array[4] = {1.0/16, 1.0/16, 1.0/16, 1.0/16};
 int min_ps = 15;
 double one_three = (1.0 / 3.0);
 
@@ -665,34 +665,34 @@ public:
     decision = saes.eigenvalues()[0] / saes.eigenvalues()[1];
     // decision = saes.eigenvalues()[0];
 
-    double eva0 = saes.eigenvalues()[0];
-    center += 3 * sqrt(eva0) * direct;
-    vector<PointCluster> covMats(8);
-    for(int i=0; i<win_count; i++)
-    {
-      for(Eigen::Vector3d &pvec: vec_tran[i])
-      {
-        int xyz[3] = {0, 0, 0};
-        for(int k=0; k<3; k++)
-          if(pvec[k] > center[k])
-            xyz[k] = 1;
-        int leafnum = 4*xyz[0] + 2*xyz[1] + xyz[2];
-        covMats[leafnum].push(pvec);
-      }
-    }
+    // double eva0 = saes.eigenvalues()[0];
+    // center += 3 * sqrt(eva0) * direct;
+    // vector<PointCluster> covMats(8);
+    // for(int i=0; i<win_count; i++)
+    // {
+    //   for(Eigen::Vector3d &pvec: vec_tran[i])
+    //   {
+    //     int xyz[3] = {0, 0, 0};
+    //     for(int k=0; k<3; k++)
+    //       if(pvec[k] > center[k])
+    //         xyz[k] = 1;
+    //     int leafnum = 4*xyz[0] + 2*xyz[1] + xyz[2];
+    //     covMats[leafnum].push(pvec);
+    //   }
+    // }
 
-    double ratios[2] = {1.0/(3.0*3.0), 2.0*2.0}; 
-    int num_all = 0, num_qua = 0;
-    for(int i=0; i<8; i++)
-    {
-      if(covMats[i].N < 10) continue;
-      Eigen::SelfAdjointEigenSolver<Eigen::Matrix3d> saes(covMats[i].cov());
-      double child_eva0 = (saes.eigenvalues()[0]);
-      if(child_eva0 > ratios[0]*eva0 && child_eva0 < ratios[1]*eva0)
-        num_qua++;
-      num_all++;
-    }
-    double prop = 1.0 * num_qua / num_all;
+    // double ratios[2] = {1.0/(3.0*3.0), 2.0*2.0}; 
+    // int num_all = 0, num_qua = 0;
+    // for(int i=0; i<8; i++)
+    // {
+    //   if(covMats[i].N < 10) continue;
+    //   Eigen::SelfAdjointEigenSolver<Eigen::Matrix3d> saes(covMats[i].cov());
+    //   double child_eva0 = (saes.eigenvalues()[0]);
+    //   if(child_eva0 > ratios[0]*eva0 && child_eva0 < ratios[1]*eva0)
+    //     num_qua++;
+    //   num_all++;
+    // }
+    // double prop = 1.0 * num_qua / num_all;
 
     return (decision < eigen_value_array[layer]);
     // return (decision < eigen_value_array[layer] && prop > 0.5);
@@ -826,8 +826,8 @@ public:
   {
     if(octo_state != 1)
     {
-      // if(push_state != 1)
-      //   return;
+      if(push_state != 1)
+        return;
 
       PointType ap;
       ap.intensity = ref;
@@ -844,10 +844,10 @@ public:
         // ap.normal_x = sqrt(value_vector[1] / value_vector[0]);
         // ap.normal_y = sqrt(value_vector[2] / value_vector[0]);
         // ap.normal_z = sqrt(value_vector[0]);
-        ap.normal_x = voxel_center[0];
-        ap.normal_y = voxel_center[1];
-        ap.normal_z = voxel_center[2];
-        ap.curvature = quater_length * 4;
+        // ap.normal_x = voxel_center[0];
+        // ap.normal_y = voxel_center[1];
+        // ap.normal_z = voxel_center[2];
+        // ap.curvature = quater_length * 4;
      
         pl_feat.push_back(ap);
       }
@@ -1032,6 +1032,22 @@ public:
 
   void damping_iter(vector<IMUST> &x_stats, VOX_HESS &voxhess)
   {
+    vector<int> planes(x_stats.size(), 0);
+    for(int i=0; i<voxhess.plvec_voxels.size(); i++)
+    {
+      for(int j=0; j<voxhess.plvec_voxels[i]->size(); j++)
+        if(voxhess.plvec_voxels[i]->at(j).N != 0)
+          planes[j]++;
+    }
+    sort(planes.begin(), planes.end());
+    if(planes[0] < 20)
+    {
+      printf("Initial error too large.\n");
+      printf("Please loose plane determination criteria for more planes.\n");
+      printf("The optimization is terminated.\n");
+      exit(0);
+    }
+
     double u = 0.01, v = 2;
     Eigen::MatrixXd D(6*win_size, 6*win_size), Hess(6*win_size, 6*win_size);
     Eigen::VectorXd JacT(6*win_size), dxi(6*win_size);
@@ -1092,7 +1108,10 @@ public:
       }
 
       // if(iter_stop(dxi2, 1e-4))
-      if(iter_stop(dxi, 1e-6))
+      // if(iter_stop(dxi, 1e-6))
+      //   break;
+
+      if(fabs(residual1-residual2)/residual1 < 1e-6)
         break;
     }
 

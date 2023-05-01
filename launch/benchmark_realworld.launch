@@ -1,7 +1,7 @@
 <launch>
 	<arg name="rviz" default="true" />
 
-	<param name="voxel_size" type="double" value="1" />
+	<param name="voxel_size" type="double" value="2" />
 	<param name="file_path" type="string" value="$(find balm2)" />
 	<node pkg="balm2" type="benchmark_realworld" name="benchmark_realworld" output="screen" />
 

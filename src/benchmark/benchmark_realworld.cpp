@@ -26,7 +26,7 @@ void pub_pl_func(T &pl, ros::Publisher &pub)
   pub.publish(output);
 }
 
-ros::Publisher pub_path, pub_test, pub_show;
+ros::Publisher pub_path, pub_test, pub_show, pub_cute;
 
 int read_pose(vector<double> &tims, PLM(3) &rots, PLV(3) &poss, string prename)
 {
@@ -148,6 +148,7 @@ int main(int argc, char **argv)
   pub_test = n.advertise<sensor_msgs::PointCloud2>("/map_test", 100);
   pub_path = n.advertise<sensor_msgs::PointCloud2>("/map_path", 100);
   pub_show = n.advertise<sensor_msgs::PointCloud2>("/map_show", 100);
+  pub_cute = n.advertise<sensor_msgs::PointCloud2>("/map_cute", 100);
 
   string prename, ofname;
   vector<IMUST> x_buf;
@@ -169,6 +170,11 @@ int main(int argc, char **argv)
   win_size = x_buf.size();
   printf("The size of poses: %d\n", win_size);
 
+  data_show(x_buf, pl_fulls);
+  printf("Check the point cloud with the initial poses.\n");
+  printf("If no problem, input '1' to continue or '0' to exit...\n");
+  int a; cin >> a; if(a==0) exit(0);
+
   pcl::PointCloud<PointType> pl_full, pl_surf, pl_path, pl_send;
   for(int iterCount=0; iterCount<1; iterCount++)
   { 
@@ -177,19 +183,33 @@ int main(int argc, char **argv)
     for(int i=0; i<win_size; i++)
       cut_voxel(surf_map, *pl_fulls[i], x_buf[i], i);
 
+    pcl::PointCloud<PointType> pl_send;
+    pub_pl_func(pl_send, pub_show);
+
     pcl::PointCloud<PointType> pl_cent; pl_send.clear();
     VOX_HESS voxhess;
     for(auto iter=surf_map.begin(); iter!=surf_map.end() && n.ok(); iter++)
     {
       iter->second->recut(win_size);
       iter->second->tras_opt(voxhess, win_size);
+      iter->second->tras_display(pl_send, win_size);
     }
 
-    data_show(x_buf, pl_fulls);
-    printf("Initial point cloud is published.\n");
-    printf("Input '1' to start optimization...\n");
+    pub_pl_func(pl_send, pub_cute);
+    printf("\nThe planes (point association) cut by adaptive voxelization.\n");
+    printf("If the planes are too few, the optimization will be degenerated and fail.\n");
+    printf("If no problem, input '1' to continue or '0' to exit...\n");
     int a; cin >> a; if(a==0) exit(0);
-    
+    pl_send.clear(); pub_pl_func(pl_send, pub_cute);
+
+    if(voxhess.plvec_voxels.size() < 3 * x_buf.size())
+    {
+      printf("Initial error too large.\n");
+      printf("Please loose plane determination criteria for more planes.\n");
+      printf("The optimization is terminated.\n");
+      exit(0);
+    }
+
     BALM2 opt_lsv;
     opt_lsv.damping_iter(x_buf, voxhess);
 
@@ -203,9 +223,10 @@ int main(int argc, char **argv)
     malloc_trim(0);
   }
 
+  printf("\nRefined point cloud is publishing...\n");
   malloc_trim(0);
   data_show(x_buf, pl_fulls);
-  printf("Refined point cloud is published.\n");
+  printf("\nRefined point cloud is published.\n");
 
   ros::spin();
   return 0;

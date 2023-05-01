@@ -449,7 +449,9 @@ public:
         is_calc_hess = false;
       }
 
-      if(iter_stop(dxi, 1e-6))
+      // if(iter_stop(dxi, 1e-6))
+      //   break;
+      if(fabs((residual1-residual2))/ residual1 < 1e-6)
         break;
     }
     double tt2 = ros::Time::now().toSec();

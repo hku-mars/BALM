@@ -2,6 +2,8 @@
 
 ## Efficient and Consistent Bundle Adjustment on Lidar Point Clouds
 
+**Notation**: If your initial pose error is too large in real-world datasets, the plane detection module may not find enough planes (point association) to BA optimization. Our plane determination criteria may be strict for huge initial pose errors. So before optimization, **please to check the planes** (which are displayed in our implementation). If you really cannot provide better initial poses and want to get accurate results, you can try the process of "**coarse-to-fine**", namely from **large voxel size** and **loose plane determination criteria**, to **small voxel size** and **strict plane determination criteria**, using multiple optimization with different point associations. 
+
 **BALM 2.0** is a basic and simple system to use bundle adjustment (BA) in lidar mapping. It includes three experiments in the paper. We try to keep the code as concise as possible, to avoid confusing the readers. It is notable that this package does not include the application experiments, which will be open-sourced in other projects. The paper  is available on Arxiv and more experiments details can be found in the [video](https://youtu.be/MDrIAyhQ-9E).
 
 <div align="center">
