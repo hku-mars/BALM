@@ -184,7 +184,6 @@ int main(int argc, char **argv)
     eigen_value_array[1] = 1.0 / 16;
     eigen_value_array[2] = 1.0 / 9;
 
-
     for(int i=0; i<win_size; i++)
       cut_voxel(surf_map, *pl_fulls[i], x_buf[i], i);
 
