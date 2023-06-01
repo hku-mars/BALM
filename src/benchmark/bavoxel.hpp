@@ -986,7 +986,7 @@ class BALM2
 public:
   BALM2(){}
 
-  double divide_thread(vector<IMUST> &x_stats, VOX_HESS &voxhess, vector<IMUST> &x_ab, Eigen::MatrixXd &Hess, Eigen::VectorXd &JacT)
+  double divide_thread_right(vector<IMUST> &x_stats, VOX_HESS &voxhess, vector<IMUST> &x_ab, Eigen::MatrixXd &Hess, Eigen::VectorXd &JacT)
   {
     int thd_num = 4;
     double residual = 0;
@@ -1009,6 +1009,42 @@ public:
     double part = 1.0 * g_size / tthd_num;
     for(int i=0; i<tthd_num; i++)
       mthreads[i] = new thread(&VOX_HESS::acc_evaluate2, &voxhess, x_stats, part*i, part*(i+1), ref(hessians[i]), ref(jacobins[i]), ref(resis[i]));
+
+    for(int i=0; i<tthd_num; i++)
+    {
+      mthreads[i]->join();
+      Hess += hessians[i];
+      JacT += jacobins[i];
+      residual += resis[i];
+      delete mthreads[i];
+    }
+
+    return residual;
+  }
+
+  double divide_thread_left(vector<IMUST> &x_stats, VOX_HESS &voxhess, vector<IMUST> &x_ab, Eigen::MatrixXd &Hess, Eigen::VectorXd &JacT)
+  {
+    int thd_num = 4;
+    double residual = 0;
+    Hess.setZero(); JacT.setZero();
+    PLM(-1) hessians(thd_num); 
+    PLV(-1) jacobins(thd_num);
+
+    for(int i=0; i<thd_num; i++)
+    {
+      hessians[i].resize(6*win_size, 6*win_size);
+      jacobins[i].resize(6*win_size);
+    }
+
+    int tthd_num = thd_num;
+    vector<double> resis(tthd_num, 0);
+    int g_size = voxhess.plvec_voxels.size();
+    if(g_size < tthd_num) tthd_num = 1;
+
+    vector<thread*> mthreads(tthd_num);
+    double part = 1.0 * g_size / tthd_num;
+    for(int i=0; i<tthd_num; i++)
+      mthreads[i] = new thread(&VOX_HESS::left_evaluate_acc2, &voxhess, x_stats, part*i, part*(i+1), ref(hessians[i]), ref(jacobins[i]), ref(resis[i]));
 
     for(int i=0; i<tthd_num; i++)
     {
@@ -1068,20 +1104,25 @@ public:
     for(int i=0; i<10; i++)
     {
       if(is_calc_hess)
-        residual1 = divide_thread(x_stats, voxhess, x_ab, Hess, JacT);
+      {
+        // residual1 = divide_thread_right(x_stats, voxhess, x_ab, Hess, JacT);
+        residual1 = divide_thread_left(x_stats, voxhess, x_ab, Hess, JacT);
+      }
+        
 
       D.diagonal() = Hess.diagonal();
       dxi = (Hess + u*D).ldlt().solve(-JacT);
 
       for(int j=0; j<win_size; j++)
       {
-        x_stats_temp[j].R = x_stats[j].R * Exp(dxi.block<3, 1>(DVEL*j, 0));
-        x_stats_temp[j].p = x_stats[j].p + dxi.block<3, 1>(DVEL*j+3, 0);
-        // x_stats_temp[j].p = x_stats[j].p + x_stats[j].R * dxi.block<3, 1>(DVEL*j+3, 0);
+        // right update
+        // x_stats_temp[j].R = x_stats[j].R * Exp(dxi.block<3, 1>(DVEL*j, 0));
+        // x_stats_temp[j].p = x_stats[j].p + dxi.block<3, 1>(DVEL*j+3, 0);
 
-        // Eigen::Matrix3d dR = Exp(dxi.block<3, 1>(DVEL*j, 0));
-        // x_stats_temp[j].R = dR * x_stats[j].R;
-        // x_stats_temp[j].p = dR * x_stats[j].p + dxi.block<3, 1>(DVEL*j+3, 0);
+        // left update
+        Eigen::Matrix3d dR = Exp(dxi.block<3, 1>(DVEL*j, 0));
+        x_stats_temp[j].R = dR * x_stats[j].R;
+        x_stats_temp[j].p = dR * x_stats[j].p + dxi.block<3, 1>(DVEL*j+3, 0);
       }
       double q1 = 0.5*dxi.dot(u*D*dxi-JacT);
 
