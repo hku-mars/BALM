@@ -67,8 +67,8 @@ Due to the file size, other dataset will be uploaded to one drive later.
 ## 4. Applications
 
 1. **Lidar-Inertial odometry with sliding window optimization**:  The codes will be open-sourced in the next work.
-2. **Multiple-Lidar calibration**: The website of [github](https://github.com/hku-mars/mlcc).
-3. **Global BA on large-scale dataset**: The website of  [github](https://github.com/hku-mars/HBA).
+2. **Multiple-Lidar calibration**: The github of [MLCC](https://github.com/hku-mars/mlcc).
+3. **Global BA on large-scale dataset**: The github of  [HBA](https://github.com/hku-mars/HBA).
 
 ## 5. Acknowledgement
 
