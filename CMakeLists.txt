@@ -24,6 +24,7 @@ find_package(catkin REQUIRED COMPONENTS
 
 find_package(Eigen3 REQUIRED)
 find_package(PCL REQUIRED)
+find_package(Ceres REQUIRED)
 
 catkin_package(
   CATKIN_DEPENDS geometry_msgs nav_msgs roscpp rospy std_msgs 
@@ -35,13 +36,14 @@ include_directories(
   include
   ${catkin_INCLUDE_DIRS}
   ${PCL_INCLUDE_DIRS}
+  ${CERES_INCLUDE_DIRS}
 )
 
 add_executable(consistency src/simulation/consistency.cpp)
 target_link_libraries(consistency ${catkin_LIBRARIES} ${PCL_LIBRARIES})
 
 add_executable(benchmark_virtual src/benchmark/benchmark_virtual.cpp)
-target_link_libraries(benchmark_virtual ${catkin_LIBRARIES} ${PCL_LIBRARIES})
+target_link_libraries(benchmark_virtual ${catkin_LIBRARIES} ${PCL_LIBRARIES} ${CERES_LIBRARIES})
 
 add_executable(benchmark_realworld src/benchmark/benchmark_realworld.cpp)
 target_link_libraries(benchmark_realworld ${catkin_LIBRARIES} ${PCL_LIBRARIES})
