@@ -6,7 +6,6 @@
 #include <geometry_msgs/PoseArray.h>
 #include <random>
 #include <ctime>
-#include "PA_ceres_head.hpp"
 using namespace std;
 
 const double one_three = (1.0 / 3.0);
@@ -100,134 +99,6 @@ void data_show(const vector<IMUST> &xBuf, vector<pcl::PointCloud<PointType>::Ptr
 
   pub_pl_func(pl_send, pub_test);
 }
-
-class PlaneAdjustmentCeres
-{
-public:
-  double ceres_iteration(vector<IMUST> &x_stats, vector<pcl::PointCloud<PointType>::Ptr> &plSurfs)
-  {
-    printf("Plane Adjustment (PA) is used.\n");
-
-    PLV(3) rot_params, pos_params, pla_params;
-    vector<PLM(4)*> plvecMat4s;
-
-    int win_size = x_stats.size();
-    for(int i=0; i<win_size; i++)
-    {
-      rot_params.push_back(Log(x_stats[i].R));
-      pos_params.push_back(x_stats[i].p);
-    }
-
-    for(pcl::PointCloud<PointType>::Ptr plPtr : plSurfs)
-    {
-      plvecMat4s.push_back(new PLM(4)(winSize));
-      PLM(4) &plvecVoxel = *plvecMat4s.back();
-
-      for(Eigen::Matrix4d &mat : plvecVoxel)
-        mat.setZero();
-      
-      PointCluster vf;
-      for(PointType &ap : plPtr->points)
-      {
-        int fn = ap.intensity;
-        Eigen::Vector4d pvec(ap.x, ap.y, ap.z, 1);
-        plvecVoxel[fn] += pvec * pvec.transpose();
-        vf.push(x_stats[fn].R * pvec.head(3) + x_stats[fn].p);
-      }
-
-      for(Eigen::Matrix4d &mat : plvecVoxel)
-      {
-        Eigen::SelfAdjointEigenSolver<Eigen::Matrix4d> saes(mat);
-        Eigen::Vector4d evalue = saes.eigenvalues();
-        Eigen::Matrix4d mleft = saes.eigenvectors();
-        Eigen::Matrix4d mvalue; mvalue.setZero();
-        for(int i=0; i<4; i++)
-        {
-          if(evalue[i] > 0)
-            mvalue(i, i) = sqrt(evalue[i]);
-        }
-        mat = (mleft * mvalue).transpose();
-        // mat = mat.llt().matrixL().transpose();
-      }
-        
-      Eigen::Vector3d center = vf.v / vf.N;
-      Eigen::Matrix3d covMat = vf.P / vf.N - center * center.transpose();
-      Eigen::SelfAdjointEigenSolver<Eigen::Matrix3d> saes(covMat);
-      Eigen::Vector3d pi = saes.eigenvectors().col(0);
-      double d = - pi.dot(center);
-      pla_params.push_back(d * pi);
-    }
-
-    double t1 = ros::Time::now().toSec();
-
-    ceres::Problem problem;
-    for(int i=0; i<win_size; i++)
-    {
-      ceres::LocalParameterization *parametrization = new ParamSO3();
-      problem.AddParameterBlock(rot_params[i].data(), 3, parametrization);
-      problem.AddParameterBlock(pos_params[i].data(), 3);
-    }
-    // problem.SetParameterBlockConstant(rot_params[0].data());
-    // problem.SetParameterBlockConstant(pos_params[0].data());
-
-    for(int i=0; i<plvecMat4s.size(); i++)
-    {
-      PLM(4) &plvecVoxel = *plvecMat4s[i];
-      for(int j=0; j<win_size; j++)
-      {
-        PACeresFactor *f = new PACeresFactor(plvecVoxel[j]);
-        problem.AddResidualBlock(f, NULL, rot_params[j].data(), pos_params[j].data(), pla_params[i].data());
-      }
-    }
-
-    ceres::Solver::Options options;
-    // options.linear_solver_type = ceres::SPARSE_SCHUR;
-    options.linear_solver_type = ceres::DENSE_SCHUR;
-    options.trust_region_strategy_type = ceres::LEVENBERG_MARQUARDT;
-    options.max_num_iterations = 1000;
-    options.minimizer_progress_to_stdout = true;
-
-    options.function_tolerance = 1e-10;
-    options.parameter_tolerance = 1e-10;
-
-    options.use_inner_iterations = true;
-    ceres::ParameterBlockOrdering* ordering = new ceres::ParameterBlockOrdering;
-    for(int i=0; i<win_size; i++)
-    {
-      ordering->AddElementToGroup(rot_params[i].data(), 0);
-      ordering->AddElementToGroup(pos_params[i].data(), 1);
-    }
-    for(int i=0; i<pla_params.size(); i++)
-    {
-      ordering->AddElementToGroup(pla_params[i].data(), 2);
-    }
-    options.inner_iteration_ordering.reset(ordering);
-
-    ceres::Solver::Summary summary;
-    ceres::Solve(options, &problem, &summary);
-    // cout << summary.BriefReport() << endl;
-    // cout << summary.FullReport() << endl;
-
-    for(int i=0; i<win_size; i++)
-    {
-      x_stats[i].R = Exp(rot_params[i]);
-      x_stats[i].p = pos_params[i];
-    }
-
-   for(int j=1; j<winSize; j++)
-    {
-      x_stats[j].p = x_stats[0].R.transpose() * (x_stats[j].p - x_stats[0].p);
-      x_stats[j].R = x_stats[0].R.transpose() * x_stats[j].R;
-    }
-
-    x_stats[0].R.setIdentity();
-    x_stats[0].p.setZero();
-
-    double t2 = ros::Time::now().toSec();
-    return t2 - t1;
-  }
-
-};
 
 class BALM2
 {
@@ -674,8 +545,6 @@ int main(int argc, char **argv)
   printf("pstSize: %d\n", ptsSize);
   
   int tseed = time(0);
-  // int tseed = 1662299903;
-  
   default_random_engine e(tseed);
   uniform_real_distribution<double> randNorml(-M_PI, M_PI);
   uniform_real_distribution<double> randRange(-surf_range, surf_range);

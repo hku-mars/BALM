@@ -338,6 +338,14 @@ public:
     P = stat.R*sigv.P*stat.R.transpose() + rp + rp.transpose() + N*stat.p*stat.p.transpose();
   }
 
+  void transform(const PointCluster &sigv, const Eigen::Matrix3d &R, const Eigen::Vector3d &p)
+  {
+    N = sigv.N;
+    v = R*sigv.v + N*p;
+    Eigen::Matrix3d rp = R * sigv.v * p.transpose();
+    P = R*sigv.P*R.transpose() + rp + rp.transpose() + N*p*p.transpose();
+  }
+
 };
 
 
