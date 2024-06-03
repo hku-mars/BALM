@@ -10,7 +10,7 @@
     <img src="./pic/formulation.png" width = 50% >
 </div>
 
-**Related papers:** 
+**Related papers:**
 
 [Efficient and Consistent Bundle Adjustment on Lidar Point Clouds](https://arxiv.org/abs/2209.08854)
 
