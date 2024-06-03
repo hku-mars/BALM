@@ -62,7 +62,9 @@ roslaunch balm2 benchmark_virtual.launch
 roslaunch balm2 benchmark_realworld.launch
 ```
 
-Due to the file size, other dataset will be uploaded to one drive later.
+You can also use the right update by: 
+
+![right_update](./pic/right_update.png)
 
 ## 4. Applications
 
