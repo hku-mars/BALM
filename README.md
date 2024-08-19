@@ -68,7 +68,7 @@ You can also use the right update by:
 
 ## 4. Applications
 
-1. **Lidar-Inertial odometry with sliding window optimization**:  The codes will be open-sourced in the next work.
+1. **Lidar-Inertial odometry with sliding window optimization**:  The github of [Voxel-SLAM](https://github.com/hku-mars/Voxel-SLAM)
 2. **Multiple-Lidar calibration**: The github of [MLCC](https://github.com/hku-mars/mlcc).
 3. **Global BA on large-scale dataset**: The github of  [HBA](https://github.com/hku-mars/HBA).
 
