@@ -68,11 +68,13 @@ You can also use the right update by:
 
 ## 4. Applications
 
-1. **Lidar-Inertial odometry with sliding window optimization**:  The github of [Voxel-SLAM](https://github.com/hku-mars/Voxel-SLAM)
+1. **Lidar-Inertial odometry with sliding window optimization**:  The github of [Voxel-SLAM](https://github.com/hku-mars/Voxel-SLAM).
 2. **Multiple-Lidar calibration**: The github of [MLCC](https://github.com/hku-mars/mlcc).
 3. **Global BA on large-scale dataset**: The github of  [HBA](https://github.com/hku-mars/HBA).
 
 ## 5. Acknowledgement
 
 In the development of this package, we refer to [FAST-LIO2](https://github.com/hku-mars/FAST_LIO), [Hilti](https://www.hilti-challenge.com/), [VIRAL](https://ntu-aris.github.io/ntu_viral_dataset/) and [UrbanLoco](https://github.com/weisongwen/UrbanLoco) for source codes or datasets.
+
+[BALM知乎链接](https://zhuanlan.zhihu.com/p/711383612)
 
