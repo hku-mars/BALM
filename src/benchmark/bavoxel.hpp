@@ -3,7 +3,9 @@
 
 #include "tools.hpp"
 #include <Eigen/Eigenvalues>
+#include <memory>
 #include <thread>
+#include <utility>
 
 int layer_limit = 2;
 int layer_size[] = {30, 30, 30, 30};
@@ -170,14 +172,14 @@ public:
     for(int i=0; i<win_size; i++)
       T[i] << xs[i].R, xs[i].p, 0, 0, 0, 1;
 
-    vector<PLM(4)*> Cs;
+    vector<std::unique_ptr<PLM(4)>> Cs;
     for(int a=0; a<plvec_voxels.size(); a++)
     {
       const vector<PointCluster> &sig_orig = *plvec_voxels[a];
-      PLM(4) *Co = new PLM(4)(win_size, Eigen::Matrix4d::Zero());
+      std::unique_ptr<PLM(4)> Co(new PLM(4)(win_size, Eigen::Matrix4d::Zero()));
       for(int i=0; i<win_size; i++)
         Co->at(i) << sig_orig[i].P, sig_orig[i].v, sig_orig[i].v.transpose(), sig_orig[i].N;
-      Cs.push_back(Co);
+      Cs.push_back(std::move(Co));
     }
 
     double t0 = ros::Time::now().toSec();
@@ -309,14 +311,14 @@ public:
     for(int i=0; i<win_size; i++)
       T[i] << xs[i].R, xs[i].p, 0, 0, 0, 1;
 
-    vector<PLM(4)*> Cs;
+    vector<std::unique_ptr<PLM(4)>> Cs;
     for(int a=0; a<plvec_voxels.size(); a++)
     {
       const vector<PointCluster> &sig_orig = *plvec_voxels[a];
-      PLM(4) *Co = new PLM(4)(win_size, Eigen::Matrix4d::Zero());
+      std::unique_ptr<PLM(4)> Co(new PLM(4)(win_size, Eigen::Matrix4d::Zero()));
       for(int i=0; i<win_size; i++)
         Co->at(i) << sig_orig[i].P, sig_orig[i].v, sig_orig[i].v.transpose(), sig_orig[i].N;
-      Cs.push_back(Co);
+      Cs.push_back(std::move(Co));
     }
     
     for(int a=head; a<end; a++)
